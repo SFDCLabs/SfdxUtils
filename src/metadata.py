@@ -8,6 +8,7 @@ from xml.dom.minidom import parseString
 
 class MetadataConstantsProvider:
     def __init__(self) -> None:
+        self.PACKAGE_FILE_NAME='package.xml'
         self.PACKAGE_START = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Package xmlns="http://soap.sforce.com/2006/04/self.metadata">\n'
         self.TYPES_START = '<types>'
         self.TYPES_END = '</types>'
@@ -67,7 +68,7 @@ class MetadataConstantsProvider:
                               'WorkSkillRouting']
 
 
-def build_package(m: MetadataConstantsProvider) -> str:
+def build_full_package(m: MetadataConstantsProvider) -> str:
     result:str = ''
     result += m.PACKAGE_START
     for meta_name in m.METADATA_NAME:
@@ -80,12 +81,18 @@ def build_package(m: MetadataConstantsProvider) -> str:
     result += m.PACKAGE_END
     return result
 
-def main() -> None:
+
+def package_writer():
     c = MetadataConstantsProvider()
-    result = build_package(c)
+    result = build_full_package(c)
     dom = parseString(result)
-    with open("package.xml","w",encoding="utf-8") as f:
+    with open(c.PACKAGE_FILE_NAME,"w",encoding="utf-8") as f:
         f.write(dom.toprettyxml())
+
+
+def main() -> None:
+    pass
+    
 
 
 if __name__ == "__main__":
